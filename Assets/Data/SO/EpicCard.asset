@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c655cbfd6aa99049bf12ce27a231481, type: 3}
   m_Name: EpicCard
   m_EditorClassIdentifier: 
-  sprite: {fileID: -1741467643, guid: 62183cc58743b2243ad0c0825fea0469, type: 3}
-  category: 4
+  _sprite: {fileID: -1741467643, guid: 62183cc58743b2243ad0c0825fea0469, type: 3}
+  _itemName: D
+  _rarity: 4

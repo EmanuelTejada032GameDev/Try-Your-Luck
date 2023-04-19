@@ -3,21 +3,13 @@ using UnityEngine.UI;
 
 public class Card : MonoBehaviour
 {
-    [SerializeField] private  CardSO cardData;
     [SerializeField] private Image image;
-    [SerializeField] private int category;
+    private int _rarity;
 
 
-    private void Awake()
+    public void SetData(CardSO cardData)
     {
         image.sprite = cardData.Sprite;
-        category = cardData.Category;
+        _rarity = cardData.Rarity;
     }
-
-    //private void Start()
-    //{
-    //    image.sprite = cardData.Sprite;
-    //    category = cardData.Category;
-    //}
-
 }

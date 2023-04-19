@@ -3,6 +3,9 @@ using UnityEngine.EventSystems;
 
 public class CardSlot : MonoBehaviour, IDropHandler
 {
+    private bool _isOccupied = false;
+    public bool IsOccupied { get => _isOccupied;}
+    
     public void OnDrop(PointerEventData eventData)
     {
         if(transform.childCount == 0)
@@ -11,6 +14,10 @@ public class CardSlot : MonoBehaviour, IDropHandler
             Draggable draggableItem = droppedObject.GetComponent<Draggable>();
             draggableItem.parentAfterDragTransform = transform;
         }
-        
+    }
+
+    public void Occupy(bool isOccupied)
+    {
+        _isOccupied = isOccupied;
     }
 }

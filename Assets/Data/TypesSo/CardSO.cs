@@ -3,16 +3,17 @@ using UnityEngine;
 [CreateAssetMenu(fileName ="Card",menuName ="Data/Card")]
 public class CardSO : ScriptableObject
 {
-    [SerializeField] private Sprite sprite;
-    [SerializeField] private int category;
+    [SerializeField] private Sprite _sprite;
+    [SerializeField] private string _itemName;
+    [SerializeField] private int _rarity;
 
     public Sprite Sprite
     {
-        get { return sprite; }
+        get { return _sprite; }
     }
 
-    public int Category
+    public int Rarity
     {
-        get { return category; }
+        get { return _rarity; }
     }
 }

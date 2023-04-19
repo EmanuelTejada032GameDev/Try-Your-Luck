@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c655cbfd6aa99049bf12ce27a231481, type: 3}
   m_Name: CommonCard
   m_EditorClassIdentifier: 
-  sprite: {fileID: 780689627, guid: 35553379f149e694d85ec4a9203a762e, type: 3}
-  category: 1
+  _sprite: {fileID: 780689627, guid: 35553379f149e694d85ec4a9203a762e, type: 3}
+  _itemName: A
+  _rarity: 1

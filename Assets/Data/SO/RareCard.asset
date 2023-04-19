@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c655cbfd6aa99049bf12ce27a231481, type: 3}
   m_Name: RareCard
   m_EditorClassIdentifier: 
-  sprite: {fileID: 225717001, guid: 705cf46314911bd47abd9236521ea8d9, type: 3}
-  category: 3
+  _sprite: {fileID: 225717001, guid: 705cf46314911bd47abd9236521ea8d9, type: 3}
+  _itemName: C
+  _rarity: 3
