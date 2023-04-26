@@ -1202,13 +1202,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 374454841317c7549bd8cf8064779f07, type: 2}
   - {fileID: 11400000, guid: 9e28226afe0819b4ea5e180888d64db6, type: 2}
   - {fileID: 11400000, guid: 3b2cbb3bf7e08824e997e246f9476621, type: 2}
-  - {fileID: 11400000, guid: 374454841317c7549bd8cf8064779f07, type: 2}
-  - {fileID: 11400000, guid: 374454841317c7549bd8cf8064779f07, type: 2}
-  - {fileID: 11400000, guid: 9e28226afe0819b4ea5e180888d64db6, type: 2}
-  - {fileID: 11400000, guid: 9e28226afe0819b4ea5e180888d64db6, type: 2}
-  - {fileID: 11400000, guid: 374454841317c7549bd8cf8064779f07, type: 2}
-  - {fileID: 11400000, guid: 374454841317c7549bd8cf8064779f07, type: 2}
-  - {fileID: 11400000, guid: 374454841317c7549bd8cf8064779f07, type: 2}
   _cardPrefab: {fileID: 8401919451913934844, guid: 931bfa9e77e28cc45bc389eccbfbc49b, type: 3}
 --- !u!1 &2104299903 stripped
 GameObject:
