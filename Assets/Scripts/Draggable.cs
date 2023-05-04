@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -9,6 +8,9 @@ using UnityEngine.UI;
 public class Draggable : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDragHandler
 {
     [HideInInspector] public Transform parentAfterDragTransform;
+
+    public static event EventHandler<CombinationData> OnCardCombined;
+    
 
     private Image itemImage;
 
@@ -57,21 +59,22 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDra
         bool isMaxRarity = CheckMaxCardRarity(cardRarityToCombine ,UIManager.Instance.CardsTypes);
         if (isMaxRarity)
         {
-            CardSO nextLevelCard = UIManager.Instance.CardsTypes.Where(x => x.Rarity == (cardRarityToCombine + 1)).SingleOrDefault();
-            cardInSlot.GetComponent<Card>().SetData(nextLevelCard);
+            OnCardCombined?.Invoke(this, new CombinationData { currencyValue = 20, scoreValue = 75});
             Destroy(gameObject);
+            Destroy(cardInSlot);
         }
         else
         {
-            Debug.Log("User score increment");
+            CardSO nextLevelCard = UIManager.Instance.CardsTypes.Where(x => x.Rarity == (cardRarityToCombine + 1)).SingleOrDefault();
+            cardInSlot.GetComponent<Card>().SetData(nextLevelCard);
+            OnCardCombined?.Invoke(this, new CombinationData { currencyValue = 0, scoreValue = 20 });
             Destroy(gameObject);
-            Destroy(cardInSlot);
         }
     }
 
     private bool CheckMaxCardRarity(int currentCardRarity , List<CardSO> cardsTypes)
     {
-        return cardsTypes.Select(x => x.Rarity).LastOrDefault() > currentCardRarity;
+        return cardsTypes.Select(x => x.Rarity).LastOrDefault() == currentCardRarity;
     }
 
     private bool CheckIsCombinableCard(GameObject droppedCard, GameObject cardInSlot)

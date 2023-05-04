@@ -13,9 +13,4 @@ public class Card : MonoBehaviour
         image.sprite = cardData.Sprite;
         _rarity = cardData.Rarity;
     }
-
-    public void UpgradeCard()
-    {
-        
-    }
 }
