@@ -7,7 +7,7 @@ public class CardPile : MonoBehaviour
     [SerializeField] private LootPackSO commonLootPack;
     [SerializeField] private LootPackSO plusLootPack;
     [SerializeField] private int _commonPackPrice = 15;
-    [SerializeField] private int _plusPackPrice = 35;
+    [SerializeField] private int _plusPackPrice = 30;
     [SerializeField] private GameObject _cardPrefab;
 
 

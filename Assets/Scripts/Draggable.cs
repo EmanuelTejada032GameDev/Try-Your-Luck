@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -8,6 +9,7 @@ using UnityEngine.UI;
 public class Draggable : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDragHandler
 {
     [HideInInspector] public Transform parentAfterDragTransform;
+    [HideInInspector] public CardSlot currentCardGridSlot;
 
     public static event EventHandler<CombinationData> OnCardCombined;
     
@@ -21,6 +23,7 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDra
 
     public void OnBeginDrag(PointerEventData eventData)
     {
+        currentCardGridSlot = transform.parent.GameObject().GetComponent<CardSlot>();
         parentAfterDragTransform = transform.parent;
         transform.SetParent(transform.root);
         transform.SetAsLastSibling();
@@ -31,25 +34,24 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDra
     {
         transform.position = eventData.position;
     }
+
     public void OnEndDrag(PointerEventData eventData)
     {
-        CombineProcess(eventData);
+        bool isCard = CheckIsCard(eventData.pointerEnter);
+        if (isCard)
+            TryCardCombination(eventData);
+
         transform.SetParent(parentAfterDragTransform);
         itemImage.raycastTarget = true;
     }
 
-    private void CombineProcess(PointerEventData eventData)
+    private void TryCardCombination(PointerEventData eventData)
     {
-        bool isCard = CheckIsCard(eventData.pointerEnter);
-        if (isCard)
-        {
             bool isCombinable = CheckIsCombinableCard(eventData.pointerDrag, eventData.pointerEnter);
-
             if (isCombinable)
             {
                 CombineCards(eventData.pointerDrag, eventData.pointerEnter);
             }
-        }
     }
 
     private void CombineCards(GameObject droppedCard, GameObject cardInSlot)
@@ -60,6 +62,8 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDra
         if (isMaxRarity)
         {
             OnCardCombined?.Invoke(this, new CombinationData { currencyValue = 20, scoreValue = 75});
+            currentCardGridSlot.Occupy(false);
+            cardInSlot.transform.parent.gameObject.GetComponent<CardSlot>().Occupy(false);
             Destroy(gameObject);
             Destroy(cardInSlot);
         }
@@ -68,6 +72,7 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDra
             CardSO nextLevelCard = UIManager.Instance.CardsTypes.Where(x => x.Rarity == (cardRarityToCombine + 1)).SingleOrDefault();
             cardInSlot.GetComponent<Card>().SetData(nextLevelCard);
             OnCardCombined?.Invoke(this, new CombinationData { currencyValue = 0, scoreValue = 20 });
+            currentCardGridSlot.Occupy(false);
             Destroy(gameObject);
         }
     }
@@ -87,6 +92,6 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDra
 
     private bool CheckIsCard(GameObject pointerEnter)
     {
-        return (pointerEnter.gameObject.GetComponent<Draggable>() != default) ? true : false;
+        return (pointerEnter?.gameObject.GetComponent<Draggable>() != default) ? true : false;
     }
 }

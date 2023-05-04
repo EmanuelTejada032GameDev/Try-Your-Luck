@@ -13,10 +13,8 @@ public class CardSlot : MonoBehaviour, IDropHandler
             GameObject droppedObject = eventData.pointerDrag;
             Draggable draggableItem = droppedObject.GetComponent<Draggable>();
             draggableItem.parentAfterDragTransform = transform;
-        }
-        else
-        {
-
+            draggableItem.currentCardGridSlot.Occupy(false);
+            Occupy(true);
         }
     }
 
