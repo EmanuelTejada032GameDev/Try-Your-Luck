@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 
@@ -11,10 +12,15 @@ public class UIManager : MonoBehaviour
     [SerializeField] private List<CardSO> _cardsTypes = new List<CardSO>();
     [SerializeField] private GameObject _cardPrefab;
 
+    [SerializeField] private LootPackSO _lootPack;
+
+    // Player UI
     [SerializeField] private int _playerCurrency = 15;
     [SerializeField] private int _playerPoints = 0;
     [SerializeField] private TextMeshProUGUI _playerCurrencyText;
     [SerializeField] private TextMeshProUGUI _playerPointsText;
+
+    private int combinedCardsChain = 0;
 
     public int PlayerCurrency { get => _playerCurrency; }
 
@@ -34,10 +40,48 @@ public class UIManager : MonoBehaviour
         Draggable.OnCardCombined += UpdatePlayerStats;
     }
 
+
+
     public void UpdatePlayerStats(object sender , CombinationData combinationData)
     {
         AddPlayerCurrency(combinationData.currencyValue);
         AddPlayerPoints(combinationData.scoreValue);
+        combinedCardsChain++;
+        if (combinedCardsChain >= 3) {
+            AssignNewRandomCardToRandomSlot();
+            combinedCardsChain = 0;
+        };
+    }
+
+    private void AssignNewRandomCardToRandomSlot()
+    {
+        CardSlot slot = GetRandomFreeSlot();
+        if (slot == default) return;
+
+        CardSO cardData = GetRandomCardSOFromLootPack(_lootPack);
+        GameObject card = GenerateCardFromData(cardData);
+
+        slot.Occupy(true);
+        card.transform.SetParent(slot.transform);
+    }
+
+
+    private CardSlot GetRandomFreeSlot()
+    {
+        return _cardSlots.Select(x => x.GetComponent<CardSlot>()).FirstOrDefault(cs => cs.IsOccupied == false);
+    }
+
+
+    private CardSO GetRandomCardSOFromLootPack(LootPackSO lootPack)
+    {
+        return lootPack.GetRandomItem().item;
+    }
+
+    private GameObject GenerateCardFromData(CardSO cardData)
+    {
+        GameObject card = Instantiate(_cardPrefab, transform.position, Quaternion.identity);
+        card.GetComponent<Card>().SetData(cardData);
+        return card;
     }
 
     public void AddPlayerCurrency(int amount)
@@ -73,29 +117,13 @@ public class UIManager : MonoBehaviour
 
     private void SetMainGridInitialCards()
     {
-        int counter = 0;
         int random = Random.Range(4, 6);
-        do
+        for (int i = 0; i < random; i++)
         {
-            GameObject randomSlot = _cardSlots[Random.Range(0, _cardSlots.Length)];
-            if (!randomSlot.GetComponent<CardSlot>().IsOccupied)
-            {
-                AssignNewCardToSlot(randomSlot);
-                counter++;
-            }
-        } while (counter < random);
+            AssignNewRandomCardToRandomSlot();
+        }
+
     }
-
-
-    private void AssignNewCardToSlot(GameObject randomSlot)
-    {
-        GameObject InstantiatedCardPrefab = Instantiate(_cardPrefab, randomSlot.GetComponent<Transform>().position, Quaternion.identity);
-        InstantiatedCardPrefab.GetComponent<Card>().SetData(_cardsTypes[Random.Range(0, _cardsTypes.Count)]);
-        InstantiatedCardPrefab.transform.SetParent(randomSlot.transform, false);
-
-        randomSlot.GetComponent<CardSlot>().Occupy(true);
-    }
-
 
     public void AssignCardToCardPileFreeSlot(GameObject Card)
     {
@@ -109,6 +137,11 @@ public class UIManager : MonoBehaviour
                 break;
             }
         }
+    }
+
+    public bool IsCardPileGridFull()
+    {
+        return _cardPileGridSlots.Select(x => x.GetComponent<CardSlot>().IsOccupied).All(slot => slot == true);
     }
 
 }

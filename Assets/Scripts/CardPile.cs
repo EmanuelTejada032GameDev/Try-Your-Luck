@@ -14,32 +14,39 @@ public class CardPile : MonoBehaviour
 
     public void GetCommonPackCardsFromPile()
     {
-        if( UIManager.Instance.PlayerCurrency >= _commonPackPrice)
+        if (!UIManager.Instance.IsCardPileGridFull())
         {
-            var randomItemsList = commonLootPack.GetRandomItems(3);
-            var itemsData = randomItemsList.Select(lootPackItem => lootPackItem.item).ToList();
-            SpawnCards(itemsData);
-            UIManager.Instance.SubstractPlayerCurrency(_commonPackPrice);
+            if ( UIManager.Instance.PlayerCurrency >= _commonPackPrice)
+            {
+                var randomItemsList = commonLootPack.GetRandomItems(3);
+                var itemsData = randomItemsList.Select(lootPackItem => lootPackItem.item).ToList();
+                SpawnCards(itemsData);
+                UIManager.Instance.SubstractPlayerCurrency(_commonPackPrice);
+            }
+            else
+            {
+                Debug.Log("Not enough currency");
+            }
         }
-        else
-        {
-            Debug.Log("Not enough currency");
-        }
+
     }
 
 
     public void GetPlusPackCardsFromPile()
     {
-        if (UIManager.Instance.PlayerCurrency > _plusPackPrice)
+        if (!UIManager.Instance.IsCardPileGridFull())
         {
-            var randomItemsList = plusLootPack.GetRandomItems(3);
-            var itemsData = randomItemsList.Select(lootPackItem => lootPackItem.item).ToList();
-            SpawnCards(itemsData);
-            UIManager.Instance.SubstractPlayerCurrency(_plusPackPrice);
-        }
-        else
-        {
-            Debug.Log("Not enough currency");
+            if (UIManager.Instance.PlayerCurrency >= _plusPackPrice)
+            {
+                var randomItemsList = plusLootPack.GetRandomItems(3);
+                var itemsData = randomItemsList.Select(lootPackItem => lootPackItem.item).ToList();
+                SpawnCards(itemsData);
+                UIManager.Instance.SubstractPlayerCurrency(_plusPackPrice);
+            }
+            else
+            {
+                Debug.Log("Not enough currency");
+            }
         }
     }
 
@@ -51,7 +58,6 @@ public class CardPile : MonoBehaviour
             InstantiatedCardPrefab.GetComponent<Card>().SetData(cardData);
 
             UIManager.Instance.AssignCardToCardPileFreeSlot(InstantiatedCardPrefab);
-
         }
 
     }

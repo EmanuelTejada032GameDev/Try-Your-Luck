@@ -61,7 +61,7 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDra
         bool isMaxRarity = CheckMaxCardRarity(cardRarityToCombine ,UIManager.Instance.CardsTypes);
         if (isMaxRarity)
         {
-            OnCardCombined?.Invoke(this, new CombinationData { currencyValue = 20, scoreValue = 75});
+            OnCardCombined?.Invoke(this, new CombinationData { currencyValue = 15, scoreValue = 75});
             currentCardGridSlot.Occupy(false);
             cardInSlot.transform.parent.gameObject.GetComponent<CardSlot>().Occupy(false);
             Destroy(gameObject);
@@ -71,7 +71,7 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDra
         {
             CardSO nextLevelCard = UIManager.Instance.CardsTypes.Where(x => x.Rarity == (cardRarityToCombine + 1)).SingleOrDefault();
             cardInSlot.GetComponent<Card>().SetData(nextLevelCard);
-            OnCardCombined?.Invoke(this, new CombinationData { currencyValue = 0, scoreValue = 20 });
+            OnCardCombined?.Invoke(this, new CombinationData { currencyValue = 5, scoreValue = 20 });
             currentCardGridSlot.Occupy(false);
             Destroy(gameObject);
         }

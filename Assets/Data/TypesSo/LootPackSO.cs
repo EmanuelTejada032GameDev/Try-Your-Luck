@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.UI;
 
 [CreateAssetMenu(menuName = "Data/LootPack", fileName = "LootPack")]
 public class LootPackSO : ScriptableObject

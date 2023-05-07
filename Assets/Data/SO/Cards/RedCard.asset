@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4c655cbfd6aa99049bf12ce27a231481, type: 3}
-  m_Name: SpecialCard
+  m_Name: RedCard
   m_EditorClassIdentifier: 
-  _sprite: {fileID: -786361186, guid: 6e37d792136b0c144a8fd8c64e59041b, type: 3}
-  _itemName: GC
-  _rarity: 7
+  _sprite: {fileID: -753833727, guid: 6a6446ff600815543a9fa093c08442ef, type: 3}
+  _itemName: RC
+  _rarity: 6
