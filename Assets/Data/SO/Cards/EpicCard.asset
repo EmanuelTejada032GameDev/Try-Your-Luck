@@ -15,3 +15,5 @@ MonoBehaviour:
   _sprite: {fileID: -1741467643, guid: 62183cc58743b2243ad0c0825fea0469, type: 3}
   _itemName: D
   _rarity: 4
+  _currencyValue: 15
+  _pointsValue: 20

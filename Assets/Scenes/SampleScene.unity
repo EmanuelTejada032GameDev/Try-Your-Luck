@@ -1889,7 +1889,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'Plus
 
-    30'
+    50'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -3004,12 +3004,16 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: d98c79ccbcec5fc47a822f725f977100, type: 2}
     - target: {fileID: 3292434645438495571, guid: ba212924c6af55a42b8ebd0407d43282, type: 3}
       propertyPath: _plusPackPrice
-      value: 30
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 3292434645438495571, guid: ba212924c6af55a42b8ebd0407d43282, type: 3}
       propertyPath: commonLootPack
       value: 
       objectReference: {fileID: 11400000, guid: 60c1840aabf944943a196fb1c1329e07, type: 2}
+    - target: {fileID: 3292434645438495571, guid: ba212924c6af55a42b8ebd0407d43282, type: 3}
+      propertyPath: _commonPackPrice
+      value: 15
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ba212924c6af55a42b8ebd0407d43282, type: 3}
 --- !u!224 &8401919450821102970 stripped

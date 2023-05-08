@@ -15,3 +15,5 @@ MonoBehaviour:
   _sprite: {fileID: 2076897858, guid: ea8c6533a2dbeef4e93aa716d95d0142, type: 3}
   _itemName: OC
   _rarity: 5
+  _currencyValue: 20
+  _pointsValue: 25

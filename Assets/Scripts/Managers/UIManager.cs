@@ -12,6 +12,9 @@ public class UIManager : MonoBehaviour
     [SerializeField] private List<CardSO> _cardsTypes = new List<CardSO>();
     [SerializeField] private GameObject _cardPrefab;
 
+    public int AvailableCardPileSlots => _cardPileGridSlots.Where(x => x.GetComponent<CardSlot>().IsOccupied == false).Count();
+
+
     [SerializeField] private LootPackSO _lootPack;
 
     // Player UI

@@ -56,12 +56,12 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDra
 
     private void CombineCards(GameObject droppedCard, GameObject cardInSlot)
     {
-        int cardRarityToCombine = droppedCard.GetComponent<Card>().Rarity;
+        Card card = droppedCard.GetComponent<Card>();
 
-        bool isMaxRarity = CheckMaxCardRarity(cardRarityToCombine ,UIManager.Instance.CardsTypes);
+        bool isMaxRarity = CheckMaxCardRarity(card.Rarity ,UIManager.Instance.CardsTypes);
         if (isMaxRarity)
         {
-            OnCardCombined?.Invoke(this, new CombinationData { currencyValue = 15, scoreValue = 75});
+            OnCardCombined?.Invoke(this, new CombinationData { currencyValue = card.CurrencyValue, scoreValue = card.PointsValue});
             currentCardGridSlot.Occupy(false);
             cardInSlot.transform.parent.gameObject.GetComponent<CardSlot>().Occupy(false);
             Destroy(gameObject);
@@ -69,9 +69,9 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDra
         }
         else
         {
-            CardSO nextLevelCard = UIManager.Instance.CardsTypes.Where(x => x.Rarity == (cardRarityToCombine + 1)).SingleOrDefault();
+            CardSO nextLevelCard = UIManager.Instance.CardsTypes.Where(x => x.Rarity == (card.Rarity + 1)).SingleOrDefault();
             cardInSlot.GetComponent<Card>().SetData(nextLevelCard);
-            OnCardCombined?.Invoke(this, new CombinationData { currencyValue = 5, scoreValue = 20 });
+            OnCardCombined?.Invoke(this, new CombinationData { currencyValue = card.CurrencyValue, scoreValue = card.PointsValue });
             currentCardGridSlot.Occupy(false);
             Destroy(gameObject);
         }

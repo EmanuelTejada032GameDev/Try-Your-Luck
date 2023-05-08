@@ -11,14 +11,13 @@ public class CardPile : MonoBehaviour
     [SerializeField] private GameObject _cardPrefab;
 
 
-
     public void GetCommonPackCardsFromPile()
     {
         if (!UIManager.Instance.IsCardPileGridFull())
         {
             if ( UIManager.Instance.PlayerCurrency >= _commonPackPrice)
             {
-                var randomItemsList = commonLootPack.GetRandomItems(3);
+                var randomItemsList = commonLootPack.GetRandomItems(UIManager.Instance.AvailableCardPileSlots);
                 var itemsData = randomItemsList.Select(lootPackItem => lootPackItem.item).ToList();
                 SpawnCards(itemsData);
                 UIManager.Instance.SubstractPlayerCurrency(_commonPackPrice);
@@ -38,7 +37,7 @@ public class CardPile : MonoBehaviour
         {
             if (UIManager.Instance.PlayerCurrency >= _plusPackPrice)
             {
-                var randomItemsList = plusLootPack.GetRandomItems(3);
+                var randomItemsList = plusLootPack.GetRandomItems(UIManager.Instance.AvailableCardPileSlots);
                 var itemsData = randomItemsList.Select(lootPackItem => lootPackItem.item).ToList();
                 SpawnCards(itemsData);
                 UIManager.Instance.SubstractPlayerCurrency(_plusPackPrice);

@@ -15,3 +15,5 @@ MonoBehaviour:
   _sprite: {fileID: -753833727, guid: 6a6446ff600815543a9fa093c08442ef, type: 3}
   _itemName: RC
   _rarity: 6
+  _currencyValue: 25
+  _pointsValue: 75
