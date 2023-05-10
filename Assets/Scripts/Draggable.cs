@@ -59,12 +59,15 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDra
         Card card = droppedCard.GetComponent<Card>();
 
         bool isMaxRarity = CheckMaxCardRarity(card.Rarity ,UIManager.Instance.CardsTypes);
+
+        if (card.CombinationSFX != default)
+            UIManager.Instance.PlayOneShotClip(card.CombinationSFX);
+
         if (isMaxRarity)
         {
+            UIManager.Instance.CheckForSpecialCard();
             OnCardCombined?.Invoke(this, new CombinationData { currencyValue = card.CurrencyValue, scoreValue = card.PointsValue});
-            currentCardGridSlot.Occupy(false);
             cardInSlot.transform.parent.gameObject.GetComponent<CardSlot>().Occupy(false);
-            Destroy(gameObject);
             Destroy(cardInSlot);
         }
         else
@@ -72,9 +75,10 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDra
             CardSO nextLevelCard = UIManager.Instance.CardsTypes.Where(x => x.Rarity == (card.Rarity + 1)).SingleOrDefault();
             cardInSlot.GetComponent<Card>().SetData(nextLevelCard);
             OnCardCombined?.Invoke(this, new CombinationData { currencyValue = card.CurrencyValue, scoreValue = card.PointsValue });
-            currentCardGridSlot.Occupy(false);
-            Destroy(gameObject);
         }
+
+        Destroy(gameObject);
+        currentCardGridSlot.Occupy(false);
     }
 
     private bool CheckMaxCardRarity(int currentCardRarity , List<CardSO> cardsTypes)

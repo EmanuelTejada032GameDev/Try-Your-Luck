@@ -5,6 +5,7 @@ public class CardSlot : MonoBehaviour, IDropHandler
 {
     private bool _isOccupied = false;
     public bool IsOccupied { get => _isOccupied;}
+    [SerializeField] private AudioClip _snapSFX;
     
     public void OnDrop(PointerEventData eventData)
     {
@@ -14,6 +15,7 @@ public class CardSlot : MonoBehaviour, IDropHandler
             Draggable draggableItem = droppedObject.GetComponent<Draggable>();
             draggableItem.parentAfterDragTransform = transform;
             draggableItem.currentCardGridSlot.Occupy(false);
+            UIManager.Instance.PlayOneShotClip(_snapSFX);
             Occupy(true);
         }
     }

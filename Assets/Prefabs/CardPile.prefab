@@ -89,3 +89,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d32e89c0b5ba4a447a16f105e3a8db59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  commonLootPack: {fileID: 11400000, guid: 60c1840aabf944943a196fb1c1329e07, type: 2}
+  plusLootPack: {fileID: 11400000, guid: d98c79ccbcec5fc47a822f725f977100, type: 2}
+  _commonPackPrice: 15
+  _plusPackPrice: 50
+  _cardPrefab: {fileID: 8401919451913934844, guid: 931bfa9e77e28cc45bc389eccbfbc49b, type: 3}
+  _cardPileSpawnSFX: {fileID: 8300000, guid: ad5b46fdf4bbf7f4b838e25748f73e8f, type: 3}
+  _cardPileBtnsSFX: {fileID: 8300000, guid: 34d6aa0faded656419c0a2de620eea18, type: 3}
+  _noCurrencySFX: {fileID: 8300000, guid: 714e878749d7da3418a0b2c614718ea9, type: 3}

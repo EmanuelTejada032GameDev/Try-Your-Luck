@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -9,6 +10,9 @@ public class CardPile : MonoBehaviour
     [SerializeField] private int _commonPackPrice = 15;
     [SerializeField] private int _plusPackPrice = 30;
     [SerializeField] private GameObject _cardPrefab;
+    [SerializeField] private AudioClip _cardPileSpawnSFX;
+    [SerializeField] private AudioClip _cardPileBtnsSFX;
+    [SerializeField] private AudioClip _noCurrencySFX;
 
 
     public void GetCommonPackCardsFromPile()
@@ -17,6 +21,7 @@ public class CardPile : MonoBehaviour
         {
             if ( UIManager.Instance.PlayerCurrency >= _commonPackPrice)
             {
+                UIManager.Instance.PlayOneShotClip(_cardPileBtnsSFX);
                 var randomItemsList = commonLootPack.GetRandomItems(UIManager.Instance.AvailableCardPileSlots);
                 var itemsData = randomItemsList.Select(lootPackItem => lootPackItem.item).ToList();
                 SpawnCards(itemsData);
@@ -24,6 +29,7 @@ public class CardPile : MonoBehaviour
             }
             else
             {
+                UIManager.Instance.PlayOneShotClip(_noCurrencySFX);
                 Debug.Log("Not enough currency");
             }
         }
@@ -37,6 +43,7 @@ public class CardPile : MonoBehaviour
         {
             if (UIManager.Instance.PlayerCurrency >= _plusPackPrice)
             {
+                UIManager.Instance.PlayOneShotClip(_cardPileBtnsSFX);
                 var randomItemsList = plusLootPack.GetRandomItems(UIManager.Instance.AvailableCardPileSlots);
                 var itemsData = randomItemsList.Select(lootPackItem => lootPackItem.item).ToList();
                 SpawnCards(itemsData);
@@ -44,18 +51,20 @@ public class CardPile : MonoBehaviour
             }
             else
             {
+                UIManager.Instance.PlayOneShotClip(_noCurrencySFX);
                 Debug.Log("Not enough currency");
             }
         }
     }
 
-    public void SpawnCards(List<CardSO> cardsData)
+     public void SpawnCards(List<CardSO> cardsData)
     {
         foreach(CardSO cardData in cardsData) 
         {
             GameObject InstantiatedCardPrefab = Instantiate(_cardPrefab, transform.position, Quaternion.identity);
             InstantiatedCardPrefab.GetComponent<Card>().SetData(cardData);
-
+            InstantiatedCardPrefab.transform.localScale = Vector3.zero;
+            //yield return new WaitForSeconds(0.20f);
             UIManager.Instance.AssignCardToCardPileFreeSlot(InstantiatedCardPrefab);
         }
 

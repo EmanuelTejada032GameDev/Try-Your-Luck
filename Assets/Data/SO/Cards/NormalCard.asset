@@ -17,3 +17,4 @@ MonoBehaviour:
   _rarity: 2
   _currencyValue: 0
   _pointsValue: 10
+  _combinationSFX: {fileID: 8300000, guid: eec21550c882a794384bbd702f40d8ba, type: 3}

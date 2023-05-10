@@ -2,6 +2,9 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using DG.Tweening;
+using System.Collections;
+using UnityEditor.VersionControl;
 
 public class UIManager : MonoBehaviour
 {
@@ -12,7 +15,10 @@ public class UIManager : MonoBehaviour
     [SerializeField] private List<CardSO> _cardsTypes = new List<CardSO>();
     [SerializeField] private GameObject _cardPrefab;
 
-    public int AvailableCardPileSlots => _cardPileGridSlots.Where(x => x.GetComponent<CardSlot>().IsOccupied == false).Count();
+    //Special Card
+    [SerializeField] private CardSlot _specialCardSlot;
+    [SerializeField] private CardSO _specialCardData;
+    [SerializeField] private AudioClip _specialCardSpawnedSFX;
 
 
     [SerializeField] private LootPackSO _lootPack;
@@ -23,9 +29,14 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _playerCurrencyText;
     [SerializeField] private TextMeshProUGUI _playerPointsText;
 
-    private int combinedCardsChain = 0;
+    private AudioSource _audioSource;
+    [SerializeField] private AudioClip _spawnPopUpSFX;
+    [SerializeField] private AudioClip _altSpawnPopUpSFX;
 
+    public int AvailableCardPileSlots => _cardPileGridSlots.Where(x => x.GetComponent<CardSlot>().IsOccupied == false).Count();
+    private int combinedCardsChain = 0;
     public int PlayerCurrency { get => _playerCurrency; }
+
 
     private void Awake()
     {
@@ -39,34 +50,13 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
-        GameStartupConfig();
+        _audioSource = GetComponent<AudioSource>(); 
         Draggable.OnCardCombined += UpdatePlayerStats;
+        GameStartupConfig();
     }
 
 
 
-    public void UpdatePlayerStats(object sender , CombinationData combinationData)
-    {
-        AddPlayerCurrency(combinationData.currencyValue);
-        AddPlayerPoints(combinationData.scoreValue);
-        combinedCardsChain++;
-        if (combinedCardsChain >= 3) {
-            AssignNewRandomCardToRandomSlot();
-            combinedCardsChain = 0;
-        };
-    }
-
-    private void AssignNewRandomCardToRandomSlot()
-    {
-        CardSlot slot = GetRandomFreeSlot();
-        if (slot == default) return;
-
-        CardSO cardData = GetRandomCardSOFromLootPack(_lootPack);
-        GameObject card = GenerateCardFromData(cardData);
-
-        slot.Occupy(true);
-        card.transform.SetParent(slot.transform);
-    }
 
 
     private CardSlot GetRandomFreeSlot()
@@ -75,18 +65,7 @@ public class UIManager : MonoBehaviour
     }
 
 
-    private CardSO GetRandomCardSOFromLootPack(LootPackSO lootPack)
-    {
-        return lootPack.GetRandomItem().item;
-    }
-
-    private GameObject GenerateCardFromData(CardSO cardData)
-    {
-        GameObject card = Instantiate(_cardPrefab, transform.position, Quaternion.identity);
-        card.GetComponent<Card>().SetData(cardData);
-        return card;
-    }
-
+    
     public void AddPlayerCurrency(int amount)
     {
         _playerCurrency += amount;
@@ -114,28 +93,73 @@ public class UIManager : MonoBehaviour
 
     private void GameStartupConfig()
     {
-        SetMainGridInitialCards();
+        StartCoroutine(SetMainGridInitialCards());
         _playerCurrencyText.text = _playerCurrency.ToString(); 
     }
 
-    private void SetMainGridInitialCards()
+    IEnumerator SetMainGridInitialCards()
     {
+        yield return new WaitForSeconds(0.5f);
+
         int random = Random.Range(4, 6);
         for (int i = 0; i < random; i++)
         {
-            AssignNewRandomCardToRandomSlot();
+            AssignNewRandomCardToRandomSlot(_spawnPopUpSFX);
+            yield return new WaitForSeconds(0.20f);
         }
 
     }
 
-    public void AssignCardToCardPileFreeSlot(GameObject Card)
+    public void UpdatePlayerStats(object sender, CombinationData combinationData)
+    {
+        AddPlayerCurrency(combinationData.currencyValue);
+        AddPlayerPoints(combinationData.scoreValue);
+        combinedCardsChain++;
+        if (combinedCardsChain >= 3)
+        {
+            AssignNewRandomCardToRandomSlot(_altSpawnPopUpSFX);
+            combinedCardsChain = 0;
+        };
+    }
+
+    private void AssignNewRandomCardToRandomSlot(AudioClip cardSpawnClip)
+    {
+        CardSlot slot = GetRandomFreeSlot();
+        if (slot == default) return;
+
+        CardSO cardData = GetRandomCardSOFromLootPack(_lootPack);
+        GameObject card = GenerateCardFromData(cardData);
+
+        slot.Occupy(true);
+        PlayOneShotClip(cardSpawnClip);
+        card.transform.SetParent(slot.transform);
+        card.transform.DOScale(1f, 0.5f).SetEase(Ease.OutBounce);
+
+    }
+
+    private CardSO GetRandomCardSOFromLootPack(LootPackSO lootPack)
+    {
+        return lootPack.GetRandomItem().item;
+    }
+
+    private GameObject GenerateCardFromData(CardSO cardData)
+    {
+        GameObject card = Instantiate(_cardPrefab, transform.position, Quaternion.identity);
+        card.GetComponent<Card>().SetData(cardData);
+        card.transform.localScale = Vector3.zero;
+        return card;
+    }
+
+    public void AssignCardToCardPileFreeSlot(GameObject card)
     {
         foreach(GameObject slot in _cardPileGridSlots)
         {
             var slotComponent = slot.GetComponent<CardSlot>();
             if(!slotComponent.IsOccupied)
             {
-                Card.GetComponent<Transform>().SetParent(slot.GetComponent<Transform>());
+                PlayOneShotClip(_spawnPopUpSFX);
+                card.GetComponent<Transform>().SetParent(slot.GetComponent<Transform>());
+                card.transform.DOScale(1f, 0.5f).SetEase(Ease.OutBounce);
                 slotComponent.Occupy(true);
                 break;
             }
@@ -147,4 +171,25 @@ public class UIManager : MonoBehaviour
         return _cardPileGridSlots.Select(x => x.GetComponent<CardSlot>().IsOccupied).All(slot => slot == true);
     }
 
+    public void PlayOneShotClip(AudioClip audioClip)
+    {
+        _audioSource.PlayOneShot(audioClip);
+    }
+
+    public void CheckForSpecialCard()
+    {
+        if (Random.Range(0, 100) < 60) SpawnSpecialCard();
+    }
+
+    private void SpawnSpecialCard()
+    {
+        if (_specialCardSlot.IsOccupied) return;
+        PlayOneShotClip(_specialCardSpawnedSFX);
+        GameObject goldCard = Instantiate(_cardPrefab, transform.position, Quaternion.identity);
+        goldCard.transform.localScale = Vector3.zero;    
+        _cardPrefab.GetComponent<Card>().SetData(_specialCardData);
+        goldCard.transform.SetParent(_specialCardSlot.transform);
+        goldCard.transform.DOScale(1f, 0.5f).SetEase(Ease.OutBounce);
+        _specialCardSlot.Occupy(true);
+    }
 }

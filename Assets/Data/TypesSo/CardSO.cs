@@ -8,6 +8,7 @@ public class CardSO : ScriptableObject
     [SerializeField] private int _rarity;
     [SerializeField] private int _currencyValue;
     [SerializeField] private int _pointsValue;
+    [SerializeField] private AudioClip _combinationSFX;
 
     public Sprite Sprite
     {
@@ -27,5 +28,10 @@ public class CardSO : ScriptableObject
     public int PointsValue
     {
         get { return _pointsValue; }
+    }
+
+    public AudioClip CombinationSFX
+    {
+        get { return _combinationSFX; }
     }
 }
