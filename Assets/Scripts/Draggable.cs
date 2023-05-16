@@ -38,6 +38,14 @@ public class Draggable : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDra
     public void OnEndDrag(PointerEventData eventData)
     {
         bool isCard = CheckIsCard(eventData.pointerEnter);
+        bool isSpecialCard = UIManager.Instance.CheckIsSpecialCardRarity(eventData.pointerDrag.GetComponent<Card>().Rarity);
+
+        if (isSpecialCard)
+        {
+            UIManager.Instance.SpecialCardUse();
+            Destroy(gameObject);
+        }
+
         if (isCard)
             TryCardCombination(eventData);
 

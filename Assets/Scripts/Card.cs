@@ -8,7 +8,7 @@ public class Card : MonoBehaviour
     private int _pointsValue;
     private AudioClip _combinationSFX;
 
-    private int _rarity;
+    [SerializeField] private int _rarity;
 
     public int Rarity => _rarity;
     public int CurrencyValue => _currencyValue;

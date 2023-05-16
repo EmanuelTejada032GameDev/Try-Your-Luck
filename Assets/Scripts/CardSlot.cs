@@ -9,7 +9,8 @@ public class CardSlot : MonoBehaviour, IDropHandler
     
     public void OnDrop(PointerEventData eventData)
     {
-        if(transform.childCount == 0)
+        bool isSpecialCard = UIManager.Instance.CheckIsSpecialCardRarity(eventData.pointerDrag.GetComponent<Card>().Rarity);
+        if (transform.childCount == 0 && !isSpecialCard)
         {
             GameObject droppedObject = eventData.pointerDrag;
             Draggable draggableItem = droppedObject.GetComponent<Draggable>();

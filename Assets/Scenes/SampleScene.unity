@@ -757,7 +757,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 8988254218632161765, guid: 54a7bd39a48a0d8458257c383a315e8f, type: 3}
       propertyPath: m_Name
-      value: CardGridSlot1 (1)
+      value: CardGridSlot1
       objectReference: {fileID: 0}
     - target: {fileID: 8988254218632161765, guid: 54a7bd39a48a0d8458257c383a315e8f, type: 3}
       propertyPath: m_IsActive
@@ -2813,6 +2813,7 @@ GameObject:
   - component: {fileID: 2015320463}
   - component: {fileID: 2015320462}
   - component: {fileID: 2015320461}
+  - component: {fileID: 2015320464}
   m_Layer: 5
   m_Name: CommonPackBTN
   m_TagString: Untagged
@@ -2864,7 +2865,7 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_HighlightedColor: {r: 1, g: 0.70679706, b: 0.11792451, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
@@ -2936,6 +2937,26 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2015320459}
   m_CullTransparentMesh: 1
+--- !u!95 &2015320464
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2015320459}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 5510489915b575a4e8e93e5cf5df95f2, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &2048672131
 GameObject:
   m_ObjectHideFlags: 0
@@ -3009,6 +3030,7 @@ MonoBehaviour:
   _playerPointsText: {fileID: 189368697}
   _spawnPopUpSFX: {fileID: 8300000, guid: ad5b46fdf4bbf7f4b838e25748f73e8f, type: 3}
   _altSpawnPopUpSFX: {fileID: 8300000, guid: ad5b46fdf4bbf7f4b838e25748f73e8f, type: 3}
+  _destroyCardSFX: {fileID: 8300000, guid: 8273ccdcfbc7b8145ba4d0d9a12efe30, type: 3}
 --- !u!82 &2048672134
 AudioSource:
   m_ObjectHideFlags: 0
@@ -3315,7 +3337,7 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_HighlightedColor: {r: 1, g: 0.6436549, b: 0.0990566, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}

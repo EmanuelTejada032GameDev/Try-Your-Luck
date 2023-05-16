@@ -7,12 +7,18 @@ public class CardPile : MonoBehaviour
 {
     [SerializeField] private LootPackSO commonLootPack;
     [SerializeField] private LootPackSO plusLootPack;
+    [SerializeField] private GameObject _commonPackBtn;
+    [SerializeField] private GameObject _plusPackBtn;
     [SerializeField] private int _commonPackPrice = 15;
     [SerializeField] private int _plusPackPrice = 30;
+
     [SerializeField] private GameObject _cardPrefab;
+
     [SerializeField] private AudioClip _cardPileSpawnSFX;
     [SerializeField] private AudioClip _cardPileBtnsSFX;
     [SerializeField] private AudioClip _noCurrencySFX;
+
+
 
 
     public void GetCommonPackCardsFromPile()

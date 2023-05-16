@@ -4,7 +4,6 @@ using TMPro;
 using UnityEngine;
 using DG.Tweening;
 using System.Collections;
-using UnityEditor.VersionControl;
 
 public class UIManager : MonoBehaviour
 {
@@ -32,6 +31,7 @@ public class UIManager : MonoBehaviour
     private AudioSource _audioSource;
     [SerializeField] private AudioClip _spawnPopUpSFX;
     [SerializeField] private AudioClip _altSpawnPopUpSFX;
+    [SerializeField] private AudioClip _destroyCardSFX;
 
     public int AvailableCardPileSlots => _cardPileGridSlots.Where(x => x.GetComponent<CardSlot>().IsOccupied == false).Count();
     private int combinedCardsChain = 0;
@@ -64,12 +64,32 @@ public class UIManager : MonoBehaviour
         return _cardSlots.Select(x => x.GetComponent<CardSlot>()).FirstOrDefault(cs => cs.IsOccupied == false);
     }
 
+    private CardSlot GetRandomOccupiedSlot()
+    {
+        bool isOccupied = false;
+        CardSlot cardSlot = default;
+        if(_cardSlots.Select(x => x.GetComponent<CardSlot>()).Any(cs => cs.IsOccupied == true))
+        {
+            do
+            {
+                GameObject cardSlotGO = _cardSlots[Random.Range(0, _cardSlots.Length)];
+                cardSlot = cardSlotGO.GetComponent<CardSlot>();
+                isOccupied = cardSlot.IsOccupied;
+            } while (isOccupied == false);
+        }
+        return cardSlot;
+    }
 
-    
     public void AddPlayerCurrency(int amount)
     {
         _playerCurrency += amount;
         _playerCurrencyText.text = _playerCurrency.ToString();
+
+        if(amount > 0)
+            _playerCurrencyText.GetComponent<RectTransform>().DOScaleY(1.4f, 0.1f).OnComplete(() =>
+            {
+                _playerCurrencyText.GetComponent<RectTransform>().DOScaleY(1, 0.05f);
+            });
     }
 
     public void SubstractPlayerCurrency(int amount)
@@ -83,6 +103,11 @@ public class UIManager : MonoBehaviour
         _playerPoints += amount;
         _playerPointsText.text = _playerPoints.ToString();
 
+        if (amount > 0)
+            _playerPointsText.GetComponent<RectTransform>().DOScaleY(1.4f, 0.1f).OnComplete(() =>
+             {
+                 _playerPointsText.GetComponent<RectTransform>().DOScaleY(1, 0.05f);
+             });
     }
 
     public void SubstractPlayerPoints(int amount)
@@ -178,18 +203,47 @@ public class UIManager : MonoBehaviour
 
     public void CheckForSpecialCard()
     {
-        if (Random.Range(0, 100) < 60) SpawnSpecialCard();
+        var randomNumber = Random.Range(0, 100);
+        Debug.Log($"Chance to spawn {randomNumber}");
+        if (randomNumber < 90) SpawnSpecialCard();
     }
 
     private void SpawnSpecialCard()
     {
         if (_specialCardSlot.IsOccupied) return;
         PlayOneShotClip(_specialCardSpawnedSFX);
-        GameObject goldCard = Instantiate(_cardPrefab, transform.position, Quaternion.identity);
-        goldCard.transform.localScale = Vector3.zero;    
-        _cardPrefab.GetComponent<Card>().SetData(_specialCardData);
+        GameObject goldCard = GenerateCardFromData(_specialCardData);
         goldCard.transform.SetParent(_specialCardSlot.transform);
         goldCard.transform.DOScale(1f, 0.5f).SetEase(Ease.OutBounce);
         _specialCardSlot.Occupy(true);
+    }
+
+    public bool CheckIsSpecialCardRarity(int rarity)
+    {
+        return rarity == _specialCardData.Rarity;
+    }
+
+    public void SpecialCardUse()
+    {
+        StartCoroutine("SpecialCardAction");
+        _specialCardSlot.Occupy(false);
+    }
+
+    public IEnumerator SpecialCardAction()
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            CardSlot cardSlot = GetRandomOccupiedSlot();
+            if (cardSlot != default)
+            {
+                GameObject cardslotGO = cardSlot.gameObject;
+                cardSlot.GetComponent<CardSlot>().Occupy(false);
+                GameObject child = cardSlot.transform.GetChild(0).gameObject;
+                Destroy(child);
+                PlayOneShotClip(_destroyCardSFX);
+            }
+            yield return new WaitForSeconds(0.1f);
+        }
+        
     }
 }
