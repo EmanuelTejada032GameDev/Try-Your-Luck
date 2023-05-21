@@ -14,9 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _possibleDrops:
   - item: {fileID: 11400000, guid: 374454841317c7549bd8cf8064779f07, type: 2}
-    _dropChance: 60
+    _dropChance: 30
   - item: {fileID: 11400000, guid: 9e28226afe0819b4ea5e180888d64db6, type: 2}
     _dropChance: 10
+  - item: {fileID: 11400000, guid: e16c346d88eab404f92fd697b5e395fe, type: 2}
+    _dropChance: 5
+  - item: {fileID: 11400000, guid: 3f0ecb0af0b4a0e4abde2b235df86053, type: 2}
+    _dropChance: 5
   - item: {fileID: 11400000, guid: 3b2cbb3bf7e08824e997e246f9476621, type: 2}
-    _dropChance: 2
+    _dropChance: 0.01
   _isTotalWeigthSet: 1

@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c655cbfd6aa99049bf12ce27a231481, type: 3}
+  m_Name: GreenV2Card
+  m_EditorClassIdentifier: 
+  _sprite: {fileID: 562464906, guid: 55c42f18d3a4377449435a41846ceb80, type: 3}
+  _itemName: CV2
+  _rarity: 2
+  _currencyValue: 5
+  _pointsValue: 15
+  _combinationSFX: {fileID: 8300000, guid: eec21550c882a794384bbd702f40d8ba, type: 3}

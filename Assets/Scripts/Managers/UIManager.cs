@@ -126,8 +126,9 @@ public class UIManager : MonoBehaviour
     {
         yield return new WaitForSeconds(0.5f);
 
-        int random = Random.Range(4, 6);
-        for (int i = 0; i < random; i++)
+        //int random = Random.Range(4, 6);
+        //for (int i = 0; i < random; i++)
+        for (int i = 0; i < 6; i++)
         {
             AssignNewRandomCardToRandomSlot(_spawnPopUpSFX);
             yield return new WaitForSeconds(0.20f);

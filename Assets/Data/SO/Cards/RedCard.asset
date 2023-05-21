@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _sprite: {fileID: -753833727, guid: 6a6446ff600815543a9fa093c08442ef, type: 3}
   _itemName: RC
-  _rarity: 6
+  _rarity: 7
   _currencyValue: 25
-  _pointsValue: 75
+  _pointsValue: 150
   _combinationSFX: {fileID: 8300000, guid: 1d4a13c3d7a79ca41bcc00ae95c19d34, type: 3}
