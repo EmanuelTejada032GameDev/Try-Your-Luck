@@ -27,4 +27,4 @@ MonoBehaviour:
     _dropChance: 0.00001
   - item: {fileID: 11400000, guid: 9aae594deb776c34aa856cedb6d7d860, type: 2}
     _dropChance: 0.00001
-  _isTotalWeigthSet: 1
+  _isTotalWeigthSet: 0

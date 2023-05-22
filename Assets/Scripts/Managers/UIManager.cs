@@ -33,6 +33,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] private AudioClip _altSpawnPopUpSFX;
     [SerializeField] private AudioClip _destroyCardSFX;
 
+    [SerializeField] private AudioSource _canvasAudioSource;
+
     public int AvailableCardPileSlots => _cardPileGridSlots.Where(x => x.GetComponent<CardSlot>().IsOccupied == false).Count();
     private int combinedCardsChain = 0;
     public int PlayerCurrency { get => _playerCurrency; }
@@ -40,6 +42,8 @@ public class UIManager : MonoBehaviour
 
     private void Awake()
     {
+        Time.timeScale = 0f;
+        _canvasAudioSource.Stop();
         if (Instance != null)
             Destroy(gameObject);
         else
@@ -52,7 +56,6 @@ public class UIManager : MonoBehaviour
     {
         _audioSource = GetComponent<AudioSource>(); 
         Draggable.OnCardCombined += UpdatePlayerStats;
-        GameStartupConfig();
     }
 
 
@@ -83,13 +86,17 @@ public class UIManager : MonoBehaviour
     public void AddPlayerCurrency(int amount)
     {
         _playerCurrency += amount;
-        _playerCurrencyText.text = _playerCurrency.ToString();
 
-        if(amount > 0)
-            _playerCurrencyText.GetComponent<RectTransform>().DOScaleY(1.4f, 0.1f).OnComplete(() =>
-            {
-                _playerCurrencyText.GetComponent<RectTransform>().DOScaleY(1, 0.05f);
-            });
+        if(_playerCurrencyText != default)
+        {
+            _playerCurrencyText.text = _playerCurrency.ToString();
+
+            if (amount > 0)
+                _playerCurrencyText.GetComponent<RectTransform>().DOScaleY(1.4f, 0.1f).OnComplete(() =>
+                {
+                    _playerCurrencyText.GetComponent<RectTransform>().DOScaleY(1, 0.05f);
+                });
+        }
     }
 
     public void SubstractPlayerCurrency(int amount)
@@ -101,13 +108,18 @@ public class UIManager : MonoBehaviour
     public void AddPlayerPoints(int amount)
     {
         _playerPoints += amount;
-        _playerPointsText.text = _playerPoints.ToString();
 
-        if (amount > 0)
-            _playerPointsText.GetComponent<RectTransform>().DOScaleY(1.4f, 0.1f).OnComplete(() =>
-             {
-                 _playerPointsText.GetComponent<RectTransform>().DOScaleY(1, 0.05f);
-             });
+        if(_playerPointsText != default)
+        {
+            _playerPointsText.text = _playerPoints.ToString();
+            if (amount > 0)
+                _playerPointsText.GetComponent<RectTransform>().DOScaleY(1.4f, 0.1f).OnComplete(() =>
+                {
+                    _playerPointsText.GetComponent<RectTransform>().DOScaleY(1, 0.05f);
+                });
+        }
+
+       
     }
 
     public void SubstractPlayerPoints(int amount)
@@ -116,9 +128,10 @@ public class UIManager : MonoBehaviour
         _playerPointsText.text = _playerPoints.ToString();
     }
 
-    private void GameStartupConfig()
+    public void GameStartupConfig()
     {
         StartCoroutine(SetMainGridInitialCards());
+        GameLoopMusic(true);
         _playerCurrencyText.text = _playerCurrency.ToString(); 
     }
 
@@ -227,12 +240,14 @@ public class UIManager : MonoBehaviour
     public void SpecialCardUse()
     {
         StartCoroutine("SpecialCardAction");
+        AddPlayerCurrency(15);
+        AddPlayerPoints(250);
         _specialCardSlot.Occupy(false);
     }
 
     public IEnumerator SpecialCardAction()
     {
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < 2; i++)
         {
             CardSlot cardSlot = GetRandomOccupiedSlot();
             if (cardSlot != default)
@@ -245,6 +260,49 @@ public class UIManager : MonoBehaviour
             }
             yield return new WaitForSeconds(0.1f);
         }
-        
+
+    }
+
+    public void ResetGame()
+    {
+        SubstractPlayerCurrency(_playerCurrency);
+        SubstractPlayerPoints(_playerPoints);
+        AddPlayerCurrency(15);
+        CleanGrids(_cardSlots);
+        CleanGrids(_cardPileGridSlots);
+        CleanGrids(new GameObject[1] { _specialCardSlot.gameObject });
+        GameLoopMusic(false);
+    }
+
+    public void ResetGameLoopAudio()
+    {
+        //GameLoopMusic(true);
+    }
+
+
+    public void GameLoopMusic(bool turnOn)
+    {
+        if (turnOn)
+        {
+            _canvasAudioSource.Play();
+        }
+        else
+        {
+            _canvasAudioSource.Stop();
+            _canvasAudioSource.time = 0;
+        }
+    }
+
+
+    private void CleanGrids(GameObject[] slots)
+    {
+        foreach (GameObject slot in slots)
+        {
+            if(slot.transform.childCount > 0)
+            {
+                slot.GetComponent<CardSlot>().Occupy(false);
+                Destroy(slot.transform.GetChild(0).gameObject);
+            }
+        }
     }
 }

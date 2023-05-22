@@ -1,10 +1,10 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour
 {
     public static bool gameIsPaused = false;
     [SerializeField] private GameObject PauseMenuPanel;
+    [SerializeField] private GameObject StartMenuPanel;
 
     private void Update()
     {
@@ -26,9 +26,18 @@ public class PauseMenu : MonoBehaviour
 
     public void MainMenu()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
-        Time.timeScale = 1f;
+        PauseMenuPanel.SetActive(false);
+        StartMenuPanel.SetActive(true);
+        UIManager.Instance.ResetGame();
+        Time.timeScale = 0f;
         gameIsPaused = false;
+    }
+
+    public void StartGame()
+    {
+        Time.timeScale = 1f;
+        StartMenuPanel.SetActive(false);
+        UIManager.Instance.GameStartupConfig();
     }
 
 
