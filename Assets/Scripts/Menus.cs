@@ -14,6 +14,10 @@ public class Menus : MonoBehaviour
 
 
     [SerializeField] private TextMeshProUGUI _finalScoreTMP;
+    [SerializeField] private TextMeshProUGUI _currencySpentTMP;
+    [SerializeField] private TextMeshProUGUI _commonPacksTMP;
+    [SerializeField] private TextMeshProUGUI _plusPacksTMP;
+
     [SerializeField] private AudioClip _gameOverClip;
 
     private bool _isGameOver = false;
@@ -91,6 +95,9 @@ public class Menus : MonoBehaviour
         UIManager.Instance.PauseGameLoopMusic(true);
         UIManager.Instance.PlayOneShotClip(_gameOverClip);
         _finalScoreTMP.text = UIManager.Instance.PlayerScore.ToString();
+        _currencySpentTMP.text = UIManager.Instance.CurrencySpent.ToString();
+        _commonPacksTMP.text = UIManager.Instance.CommonPacksBougths.ToString();
+        _plusPacksTMP.text = UIManager.Instance.PlusPacksBougths.ToString();
         GameOverMenuPanel.SetActive(true);
         _isGameOver = true;
     }

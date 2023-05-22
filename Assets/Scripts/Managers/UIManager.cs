@@ -24,10 +24,14 @@ public class UIManager : MonoBehaviour
     [SerializeField] private LootPackSO _lootPack;
 
     // Player UI
-    [SerializeField] private int _playerCurrency = 15;
+    [SerializeField] private int _playerCurrency = 0;
     [SerializeField] private int _playerPoints = 0;
     [SerializeField] private TextMeshProUGUI _playerCurrencyText;
     [SerializeField] private TextMeshProUGUI _playerPointsText;
+
+    private int _commonPacksBougth = 0;
+    private int _plusPacksBougth = 0;
+    private int _currencySpent = 0;
 
     private AudioSource _audioSource;
     [SerializeField] private AudioClip _spawnPopUpSFX;
@@ -40,6 +44,9 @@ public class UIManager : MonoBehaviour
     private int combinedCardsChain = 0;
     public int PlayerCurrency { get => _playerCurrency; }
     public int PlayerScore { get => _playerPoints; }
+    public int CurrencySpent { get => _currencySpent; }
+    public int CommonPacksBougths { get => _commonPacksBougth; }
+    public int PlusPacksBougths { get => _plusPacksBougth; }
 
 
     private void Awake()
@@ -56,7 +63,7 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
-        _playerCurrency = CardPile.Instance.CommonPackPrice;
+        _playerCurrency = CardPile.Instance.CommonPackPrice * 2;
         _audioSource = GetComponent<AudioSource>();
         Draggable.OnCardCombined += UpdatePlayerStats;
     }
@@ -149,6 +156,21 @@ public class UIManager : MonoBehaviour
             yield return new WaitForSeconds(0.20f);
         }
 
+    }
+
+    public void AddToSpentCurrency(int amount)
+    {
+        _currencySpent += amount;
+    }
+
+    public void AddPlusPack()
+    {
+        _plusPacksBougth += 1;
+    }
+
+    public void AddCommonPack()
+    {
+        _commonPacksBougth += 1;
     }
 
     public void UpdatePlayerStats(object sender, CombinationData combinationData)
@@ -326,9 +348,12 @@ public class UIManager : MonoBehaviour
 
     public void ResetGame()
     {
+        _commonPacksBougth = 0;
+        _plusPacksBougth = 0;
+        _currencySpent = 0;
         SubstractPlayerCurrency(_playerCurrency);
         SubstractPlayerPoints(_playerPoints);
-        AddPlayerCurrency(CardPile.Instance.CommonPackPrice);
+        AddPlayerCurrency(CardPile.Instance.CommonPackPrice * 2);
         CleanGrids(_cardSlots);
         CleanGrids(_cardPileGridSlots);
         CleanGrids(new GameObject[1] { _specialCardSlot.gameObject });

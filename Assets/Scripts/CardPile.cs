@@ -44,6 +44,8 @@ public class CardPile : MonoBehaviour
                 var itemsData = randomItemsList.Select(lootPackItem => lootPackItem.item).ToList();
                 SpawnCards(itemsData);
                 UIManager.Instance.SubstractPlayerCurrency(_commonPackPrice);
+                UIManager.Instance.AddCommonPack();
+                UIManager.Instance.AddToSpentCurrency(_commonPackPrice);
                 UIManager.Instance.CheckGameOver();
             }
             else
@@ -67,6 +69,8 @@ public class CardPile : MonoBehaviour
                 var itemsData = randomItemsList.Select(lootPackItem => lootPackItem.item).ToList();
                 SpawnCards(itemsData);
                 UIManager.Instance.SubstractPlayerCurrency(_plusPackPrice);
+                UIManager.Instance.AddPlusPack();
+                UIManager.Instance.AddToSpentCurrency(_plusPackPrice);
                 UIManager.Instance.CheckGameOver();
             }
             else
