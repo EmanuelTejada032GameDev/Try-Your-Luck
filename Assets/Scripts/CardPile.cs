@@ -1,10 +1,11 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 public class CardPile : MonoBehaviour
 {
+    public static CardPile Instance;
+
     [SerializeField] private LootPackSO commonLootPack;
     [SerializeField] private LootPackSO plusLootPack;
     [SerializeField] private GameObject _commonPackBtn;
@@ -19,7 +20,18 @@ public class CardPile : MonoBehaviour
     [SerializeField] private AudioClip _noCurrencySFX;
 
 
+    public int CommonPackPrice => _commonPackPrice;
+    public int PlusPackPrice => _plusPackPrice;
 
+       
+
+    private void Awake()
+    {
+        if (Instance != null)
+            Destroy(gameObject);
+        else
+            Instance = this;
+    }
 
     public void GetCommonPackCardsFromPile()
     {
@@ -32,6 +44,7 @@ public class CardPile : MonoBehaviour
                 var itemsData = randomItemsList.Select(lootPackItem => lootPackItem.item).ToList();
                 SpawnCards(itemsData);
                 UIManager.Instance.SubstractPlayerCurrency(_commonPackPrice);
+                UIManager.Instance.CheckGameOver();
             }
             else
             {
@@ -54,6 +67,7 @@ public class CardPile : MonoBehaviour
                 var itemsData = randomItemsList.Select(lootPackItem => lootPackItem.item).ToList();
                 SpawnCards(itemsData);
                 UIManager.Instance.SubstractPlayerCurrency(_plusPackPrice);
+                UIManager.Instance.CheckGameOver();
             }
             else
             {

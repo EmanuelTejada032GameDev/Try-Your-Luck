@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 using DG.Tweening;
 using System.Collections;
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
 
 public class UIManager : MonoBehaviour
 {
@@ -38,6 +39,7 @@ public class UIManager : MonoBehaviour
     public int AvailableCardPileSlots => _cardPileGridSlots.Where(x => x.GetComponent<CardSlot>().IsOccupied == false).Count();
     private int combinedCardsChain = 0;
     public int PlayerCurrency { get => _playerCurrency; }
+    public int PlayerScore { get => _playerPoints; }
 
 
     private void Awake()
@@ -54,7 +56,8 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
-        _audioSource = GetComponent<AudioSource>(); 
+        _playerCurrency = CardPile.Instance.CommonPackPrice;
+        _audioSource = GetComponent<AudioSource>();
         Draggable.OnCardCombined += UpdatePlayerStats;
     }
 
@@ -138,10 +141,9 @@ public class UIManager : MonoBehaviour
     IEnumerator SetMainGridInitialCards()
     {
         yield return new WaitForSeconds(0.5f);
-
         //int random = Random.Range(4, 6);
         //for (int i = 0; i < random; i++)
-        for (int i = 0; i < 6; i++)
+        for (int i = 0; i < 3; i++)
         {
             AssignNewRandomCardToRandomSlot(_spawnPopUpSFX);
             yield return new WaitForSeconds(0.20f);
@@ -154,11 +156,70 @@ public class UIManager : MonoBehaviour
         AddPlayerCurrency(combinationData.currencyValue);
         AddPlayerPoints(combinationData.scoreValue);
         combinedCardsChain++;
-        if (combinedCardsChain >= 3)
+        if (combinedCardsChain >= 2)
         {
             AssignNewRandomCardToRandomSlot(_altSpawnPopUpSFX);
             combinedCardsChain = 0;
         };
+
+        CheckGameOver();
+    }
+
+    public void CheckGameOver()
+    {
+        var isLostGame = CheckLostGame();
+        if (isLostGame)
+        {
+            Menus.Instance.GameOver();
+        }
+    }
+
+    public bool CheckLostGame()
+    {
+        bool enoughCurrency = CheckEnoughCurrency();
+        bool checkFreeSlots = CheckFreeSlots();
+        bool combinableCardsInGrids = CheckCombinableCardsInGrids();
+        bool hasSpecialCard = _specialCardSlot.IsOccupied;
+
+        return (!enoughCurrency && !combinableCardsInGrids && !hasSpecialCard) || (!checkFreeSlots && !combinableCardsInGrids && !hasSpecialCard);
+    }
+
+    private bool CheckFreeSlots()
+    {
+        return (_cardSlots.Select(x => x.GetComponent<CardSlot>().IsOccupied).Any(occupiedSlot => occupiedSlot == false)
+                || _cardPileGridSlots.Select(x => x.GetComponent<CardSlot>().IsOccupied).Any(occupiedSlot => occupiedSlot == false));
+    }
+
+    private bool CheckCombinableCardsInGrids()
+    {
+        List<int> cardRaritys = new List<int>();
+        foreach (GameObject slot in _cardSlots)
+        {
+            if (slot.transform.childCount > 0)
+            {
+                int cardRarity = slot.transform.GetChild(0).GetComponent<Card>().Rarity;
+                cardRaritys.Add(cardRarity);
+            }
+        }
+
+        foreach (GameObject slot in _cardPileGridSlots)
+        {
+            if (slot.transform.childCount > 0)
+            {
+                int cardRarity = slot.transform.GetChild(0).GetComponent<Card>().Rarity;
+                cardRaritys.Add(cardRarity);
+            }
+        }
+
+        var count = cardRaritys.Count;
+        var distinct = cardRaritys.Distinct().Count();
+
+        return cardRaritys.Count != cardRaritys.Distinct().Count();
+    }
+
+    private bool CheckEnoughCurrency()
+    {
+        return _playerCurrency >= CardPile.Instance.CommonPackPrice;
     }
 
     private void AssignNewRandomCardToRandomSlot(AudioClip cardSpawnClip)
@@ -219,7 +280,7 @@ public class UIManager : MonoBehaviour
     {
         var randomNumber = Random.Range(0, 100);
         Debug.Log($"Chance to spawn {randomNumber}");
-        if (randomNumber < 90) SpawnSpecialCard();
+        if (randomNumber < 40) SpawnSpecialCard();
     }
 
     private void SpawnSpecialCard()
@@ -240,7 +301,7 @@ public class UIManager : MonoBehaviour
     public void SpecialCardUse()
     {
         StartCoroutine("SpecialCardAction");
-        AddPlayerCurrency(15);
+        AddPlayerCurrency(CardPile.Instance.CommonPackPrice);
         AddPlayerPoints(250);
         _specialCardSlot.Occupy(false);
     }
@@ -267,18 +328,20 @@ public class UIManager : MonoBehaviour
     {
         SubstractPlayerCurrency(_playerCurrency);
         SubstractPlayerPoints(_playerPoints);
-        AddPlayerCurrency(15);
+        AddPlayerCurrency(CardPile.Instance.CommonPackPrice);
         CleanGrids(_cardSlots);
         CleanGrids(_cardPileGridSlots);
         CleanGrids(new GameObject[1] { _specialCardSlot.gameObject });
         GameLoopMusic(false);
     }
 
-    public void ResetGameLoopAudio()
+    public void PauseGameLoopMusic(bool pause)
     {
-        //GameLoopMusic(true);
+        if(pause)
+            _canvasAudioSource.Pause();
+        else
+            _canvasAudioSource.UnPause();
     }
-
 
     public void GameLoopMusic(bool turnOn)
     {

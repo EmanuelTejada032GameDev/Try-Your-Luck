@@ -5,6 +5,7 @@ public class CardSlot : MonoBehaviour, IDropHandler
 {
     private bool _isOccupied = false;
     public bool IsOccupied { get => _isOccupied;}
+    [SerializeField] private bool _specialCardSlot;
     [SerializeField] private AudioClip _snapSFX;
     
     public void OnDrop(PointerEventData eventData)
@@ -12,6 +13,8 @@ public class CardSlot : MonoBehaviour, IDropHandler
         bool isSpecialCard = UIManager.Instance.CheckIsSpecialCardRarity(eventData.pointerDrag.GetComponent<Card>().Rarity);
         if (transform.childCount == 0 && !isSpecialCard)
         {
+
+            if (_specialCardSlot) return;
             GameObject droppedObject = eventData.pointerDrag;
             Draggable draggableItem = droppedObject.GetComponent<Draggable>();
             draggableItem.parentAfterDragTransform = transform;
