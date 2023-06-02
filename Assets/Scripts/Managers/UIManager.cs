@@ -302,7 +302,7 @@ public class UIManager : MonoBehaviour
     {
         var randomNumber = Random.Range(0, 100);
         Debug.Log($"Chance to spawn {randomNumber}");
-        if (randomNumber < 40) SpawnSpecialCard();
+        if (randomNumber < 70) SpawnSpecialCard();
     }
 
     private void SpawnSpecialCard()
